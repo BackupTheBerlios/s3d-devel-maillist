@@ -1,0 +1,223 @@
+From running.sun at gmail.com  Sat Aug 29 01:02:15 2009
+From: running.sun at gmail.com (running.sun at gmail.com)
+Date: Sat, 29 Aug 2009 01:02:15 +0200
+Subject: [PATCH] added key repeat and changed dot_mcp key handlers to play
+	along
+Message-ID: <1251500535-14827-1-git-send-email-running.sun@gmail.com>
+
+From: kook <kook at sabayon.(none)>
+
+---
+ apps/dot_mcp/main.c |   16 ++++++++--------
+ server/user_sdl.c   |    1 +
+ 2 files changed, 9 insertions(+), 8 deletions(-)
+Its not the same behavior, not so smooth.
+Please see that i didnt test how all the other programs respond to keyrepeat.
+Also i did SDL_DEFAULT_REPEAT_DELAY/2, SDL_DEFAULT_REPEAT_INTERVAL*2 because
+theyre hardcoded to 500 and 30 in my sdl.h.
+diff --git a/apps/dot_mcp/main.c b/apps/dot_mcp/main.c
+index 232b38c..cc9625a 100644
+--- a/apps/dot_mcp/main.c
++++ b/apps/dot_mcp/main.c
+@@ -453,16 +453,16 @@ static int keydown(struct s3d_evt *event)
+ 		printf("ego mode %d\n", ego_mode);
+ 		break;
+ 	case 'w':
+-		ydif += -1.0;
++		ydif = -1.0;
+ 		break;
+ 	case 'a':
+-		xdif += -1.0;
++		xdif = -1.0;
+ 		break;
+ 	case 's':
+-		ydif += 1.0;
++		ydif = 1.0;
+ 		break;
+ 	case 'd':
+-		xdif += 1.0;
++		xdif = 1.0;
+ 		break;
+ 	}
+ 	return(0);
+@@ -473,16 +473,16 @@ static int keyup(struct s3d_evt *event)
+ 	struct s3d_key_event *keys = (struct s3d_key_event *)event->buf;
+ 	switch (keys->keysym) {
+ 	case 'w':
+-		ydif -= -1.0;
++		ydif = 0;
+ 		break;
+ 	case 'a':
+-		xdif -= -1.0;
++		xdif = 0;
+ 		break;
+ 	case 's':
+-		ydif -= 1.0;
++		ydif = 0;
+ 		break;
+ 	case 'd':
+-		xdif -= 1.0;
++		xdif = 0;
+ 		break;
+ 	}
+ 	return(0);
+diff --git a/server/user_sdl.c b/server/user_sdl.c
+index dd3fd20..f04dd17 100644
+--- a/server/user_sdl.c
++++ b/server/user_sdl.c
+@@ -29,6 +29,7 @@
+ 
+ int user_init_sdl(void)
+ {
++	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY/2, SDL_DEFAULT_REPEAT_INTERVAL*2);
+ 	SDL_EnableUNICODE(1);
+ 	return(0);
+ }
+-- 
+1.6.4
+
+
+
+From sven.eckelmann at gmx.de  Fri Aug 28 23:24:34 2009
+From: sven.eckelmann at gmx.de (Sven Eckelmann)
+Date: Fri, 28 Aug 2009 23:24:34 +0200
+Subject: [PATCH] added key repeat and changed dot_mcp key handlers to play
+	along
+In-Reply-To: <1251500535-14827-1-git-send-email-running.sun@gmail.com>
+References: <1251500535-14827-1-git-send-email-running.sun@gmail.com>
+Message-ID: <200908282324.39454.sven.eckelmann@gmx.de>
+
+Rejected (if Simon doesn't think different):
+
+Not correct name in From and not correct Signed-off-by line.
+
+There is also no real description what it makes and why it is needed. The 
+description has to be before the signed-off-by line. It is needed because 
+otherwise git am will just ignore the description. I will not apply a change 
+to the behavior unless I get a real good explanation with the positive and 
+negative effects of it.
+
+> From: kook <kook at sabayon.(none)>
+>
+> ---
+>  apps/dot_mcp/main.c |   16 ++++++++--------
+>  server/user_sdl.c   |    1 +
+>  2 files changed, 9 insertions(+), 8 deletions(-)
+> Its not the same behavior, not so smooth.
+> Please see that i didnt test how all the other programs respond to
+> keyrepeat. Also i did SDL_DEFAULT_REPEAT_DELAY/2,
+> SDL_DEFAULT_REPEAT_INTERVAL*2 because theyre hardcoded to 500 and 30 in my
+> sdl.h.
+> diff --git a/apps/dot_mcp/main.c b/apps/dot_mcp/main.c
+> index 232b38c..cc9625a 100644
+> --- a/apps/dot_mcp/main.c
+> +++ b/apps/dot_mcp/main.c
+> @@ -453,16 +453,16 @@ static int keydown(struct s3d_evt *event)
+>  		printf("ego mode %d\n", ego_mode);
+>  		break;
+>  	case 'w':
+> -		ydif += -1.0;
+> +		ydif = -1.0;
+>  		break;
+>  	case 'a':
+> -		xdif += -1.0;
+> +		xdif = -1.0;
+>  		break;
+>  	case 's':
+> -		ydif += 1.0;
+> +		ydif = 1.0;
+>  		break;
+>  	case 'd':
+> -		xdif += 1.0;
+> +		xdif = 1.0;
+>  		break;
+>  	}
+>  	return(0);
+> @@ -473,16 +473,16 @@ static int keyup(struct s3d_evt *event)
+>  	struct s3d_key_event *keys = (struct s3d_key_event *)event->buf;
+>  	switch (keys->keysym) {
+>  	case 'w':
+> -		ydif -= -1.0;
+> +		ydif = 0;
+>  		break;
+>  	case 'a':
+> -		xdif -= -1.0;
+> +		xdif = 0;
+>  		break;
+>  	case 's':
+> -		ydif -= 1.0;
+> +		ydif = 0;
+>  		break;
+>  	case 'd':
+> -		xdif -= 1.0;
+> +		xdif = 0;
+>  		break;
+>  	}
+>  	return(0);
+Changes looks good for me, but I would ask Simon what was his intention when 
+he wrote that.
+
+> diff --git a/server/user_sdl.c b/server/user_sdl.c
+> index dd3fd20..f04dd17 100644
+> --- a/server/user_sdl.c
+> +++ b/server/user_sdl.c
+> @@ -29,6 +29,7 @@
+>
+>  int user_init_sdl(void)
+>  {
+> +	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY/2,
+> SDL_DEFAULT_REPEAT_INTERVAL*2); SDL_EnableUNICODE(1);
+>  	return(0);
+>  }
+Hm, doesn't understand why you need to override the default delays.
+
+A check of all other programs would be needed (practical and code reading) as 
+this is an important change of the behavior. I would reject the patch for now 
+so the check is also postponed.
+
+Best regards,
+	Sven
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 835 bytes
+Desc: This is a digitally signed message part.
+URL: <https://lists.berlios.de/pipermail/s3d-devel/attachments/20090828/fa8629b6/attachment.pgp>
+
+From sven.eckelmann at gmx.de  Sat Aug 29 09:32:50 2009
+From: sven.eckelmann at gmx.de (Sven Eckelmann)
+Date: Sat, 29 Aug 2009 09:32:50 +0200
+Subject: [PATCH] added key repeat and changed dot_mcp key handlers to play
+	along
+In-Reply-To: <200908282324.39454.sven.eckelmann@gmx.de>
+References: <1251500535-14827-1-git-send-email-running.sun@gmail.com>
+	<200908282324.39454.sven.eckelmann@gmx.de>
+Message-ID: <200908290932.51251.sven.eckelmann@gmx.de>
+
+Hi,
+
+> There is also no real description what it makes and why it is needed. The
+> description has to be before the signed-off-by line. It is needed because
+> otherwise git am will just ignore the description. I will not apply a
+> change to the behavior unless I get a real good explanation with the
+> positive and negative effects of it.
+So that we understand us correctly. I don't mean that you misplaced the 
+explanation, but that a good commitable explanation is complete missing. See 
+for example http://marc.info/?l=linuxppc-embedded&m=125128674020388&w=2 for a 
+patch with a "private" message underneath the signed-off-by + --- and a good 
+explanation for his changes before the Signed-off-by. Without such information 
+it is also quite hard to understand the patch for a maintainer and it is 
+nearly impossible to discuss it. Another good example is 
+http://marc.info/?l=linux-kernel&m=121587011903519&w=2
+
+Best regards,
+ 	Sven
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 835 bytes
+Desc: This is a digitally signed message part.
+URL: <https://lists.berlios.de/pipermail/s3d-devel/attachments/20090829/86993ef5/attachment.pgp>
+

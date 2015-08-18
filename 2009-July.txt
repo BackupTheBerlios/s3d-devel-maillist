@@ -1,0 +1,52 @@
+From sven.eckelmann at gmx.de  Sat Jul 11 15:13:30 2009
+From: sven.eckelmann at gmx.de (Sven Eckelmann)
+Date: Sat, 11 Jul 2009 15:13:30 +0200
+Subject: [PATCH] Add informations about packaging new release for debian
+Message-ID: <1247318010-13356-1-git-send-email-sven.eckelmann@gmx.de>
+
+
+Signed-off-by: Sven Eckelmann <sven.eckelmann at gmx.de>
+---
+ Documentation/Maintain.txt |   27 +++++++++++++++++++++++++++
+ 1 files changed, 27 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/Maintain.txt b/Documentation/Maintain.txt
+index aa02f0e..68c5eff 100644
+--- a/Documentation/Maintain.txt
++++ b/Documentation/Maintain.txt
+@@ -105,3 +105,30 @@ Preparing a release:
+  - Push committed changes to the htdocs repository
+ 
+  - Add a release note to http://freshmeat.net/projects/s3d_
++
++Preparing debian -1 revision:
++ - Check that ~/.devscripts says 'DEBCHANGE_RELEASE_HEURISTIC=changelog'
++
++ - Rename tar.gz to s3d_$VERSION.orig.tar.gz
++
++ - Merge release into debian `git merge v$VERSION`
++
++ - Import orig.tar.gz into pristine-tar
++    $ pristine-tar gendelta s3d_$VERSION.orig.tar.gz v$VERSION~0
++
++ - Create a 'New upstream release' entry inside debian/changelog
++    $ dch -v$VERSION-1
++
++ - Check debian/copyright and debian/patches
++
++ - Usual debian quality assurance
++
++ - Testbuild package with `git-buildpackage`
++
++ - Finally create release
++    $ dch -r
++    $ git buildpackage --git-tag
++
++ - Push changes to berlios
++    $ git push
++    $ git push --tags
+-- 
+1.6.3.3
+
+
+

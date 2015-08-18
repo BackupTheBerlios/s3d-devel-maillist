@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [PATCH] Add informations about packaging new release for debian
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/s3d-devel/2009-July/index.html" >
+   <LINK REL="made" HREF="mailto:s3d-devel%40lists.berlios.de?Subject=Re%3A%20%5BPATCH%5D%20Add%20informations%20about%20packaging%20new%20release%20for%20debian&In-Reply-To=%3C1247318010-13356-1-git-send-email-sven.eckelmann%40gmx.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[PATCH] Add informations about packaging new release for debian</H1>
+    <B>Sven Eckelmann</B> 
+    <A HREF="mailto:s3d-devel%40lists.berlios.de?Subject=Re%3A%20%5BPATCH%5D%20Add%20informations%20about%20packaging%20new%20release%20for%20debian&In-Reply-To=%3C1247318010-13356-1-git-send-email-sven.eckelmann%40gmx.de%3E"
+       TITLE="[PATCH] Add informations about packaging new release for debian">sven.eckelmann at gmx.de
+       </A><BR>
+    <I>Sat Jul 11 15:13:30 CEST 2009</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>
+Signed-off-by: Sven Eckelmann &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/s3d-devel">sven.eckelmann at gmx.de</A>&gt;
+---
+ Documentation/Maintain.txt |   27 +++++++++++++++++++++++++++
+ 1 files changed, 27 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/Maintain.txt b/Documentation/Maintain.txt
+index aa02f0e..68c5eff 100644
+--- a/Documentation/Maintain.txt
++++ b/Documentation/Maintain.txt
+@@ -105,3 +105,30 @@ Preparing a release:
+  - Push committed changes to the htdocs repository
+ 
+  - Add a release note to <A HREF="http://freshmeat.net/projects/s3d">http://freshmeat.net/projects/s3d</A>_
++
++Preparing debian -1 revision:
++ - Check that ~/.devscripts says 'DEBCHANGE_RELEASE_HEURISTIC=changelog'
++
++ - Rename tar.gz to s3d_$VERSION.orig.tar.gz
++
++ - Merge release into debian `git merge v$VERSION`
++
++ - Import orig.tar.gz into pristine-tar
++    $ pristine-tar gendelta s3d_$VERSION.orig.tar.gz v$VERSION~0
++
++ - Create a 'New upstream release' entry inside debian/changelog
++    $ dch -v$VERSION-1
++
++ - Check debian/copyright and debian/patches
++
++ - Usual debian quality assurance
++
++ - Testbuild package with `git-buildpackage`
++
++ - Finally create release
++    $ dch -r
++    $ git buildpackage --git-tag
++
++ - Push changes to berlios
++    $ git push
++    $ git push --tags
+-- 
+1.6.3.3
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/s3d-devel">More information about the S3d-devel
+mailing list</a><br>
+</body></html>
